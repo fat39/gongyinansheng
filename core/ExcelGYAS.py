@@ -5,7 +5,7 @@ import sys
 import os
 
 
-# Base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+Base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # sys.path.insert(0,Base_path)
 
 
@@ -45,10 +45,12 @@ class ExcelGYAS(object):
 
 
 def ExcelGYAS_run():
-    with open('..\\db\\getGYAS.txt','r') as f:
+    with open('db\\getGYAS.txt','r') as f:
         GYAS = ExcelGYAS(f)
-        # GYAS.writeexcel("{}\\bin\\工银安盛账户.xls".format(Base_path))
-        GYAS.writeexcel("..\\bin\\工银安盛账户.xls")
+        excel_path = "{}\\工银安盛账户.xls".format(Base_path)
+        GYAS.writeexcel(excel_path)
+
+        # GYAS.writeexcel("..\\工银安盛账户.xls")
 
 # if __name__ == "__main__":
 #     ExcelGYAS_run()

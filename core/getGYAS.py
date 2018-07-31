@@ -9,6 +9,8 @@ from urllib import request, parse
 import json
 import time
 import threading
+from gevent import monkey;monkey.patch_all()
+import gevent
 
 class Gongyinansheng(object):
     url = r'https://www.icbc-axa.com/axa/getUlPriceByType.do'
@@ -98,20 +100,22 @@ class Do(object):
             # for year in range(2003, self.now_year+1):
             for year in range(self.now_year-1, self.now_year+1):
                 for month in range(1,13):
-                    t = threading.Thread(target=self.run_gyas_once,args=(ulType,year,month,))
-                    t_list.append(t)  # 建立所有线程的list
+                    t_list.append(gevent.spawn(self.run_gyas_once,ulType, year, month))
+                    # t = threading.Thread(target=self.run_gyas_once,args=(ulType,year,month,))
+                    # t_list.append(t)  # 建立所有线程的list
 
+        gevent.joinall(t_list)
         # print(len(t_list))
-        for t in t_list:
-            t.start()  # 批量开始线程
-            # time.sleep(0.1)
-
-        for t in t_list:
-            t.join()  # 等待所有线程结束，主线程才进行下一步
+        # for t in t_list:
+        #     t.start()  # 批量开始线程
+        #     # time.sleep(0.1)
+        #
+        # for t in t_list:
+        #     t.join()  # 等待所有线程结束，主线程才进行下一步
 
 
     def write_data(self):
-        with open('..\\db\\getGYAS.txt', 'w') as f:
+        with open('db\\getGYAS.txt', 'w') as f:
             f.write(json.dumps(self.gyas_dict))
 
 
